@@ -27,12 +27,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     private Context context;
     private List<Post> posts;
-    private static final String TAG = "PostsAdapter";
-    // implemented for timestamp feature
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
     public PostsAdapter(Context context, List<Post> posts){
         this.context = context;
@@ -81,7 +75,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) {
             // bind the post data to the view elements
             tvUsername.setText(post.getUser().getUsername());
-            tvDescription.setText(post.getDescription() + "\n" + getRelativeTimeAgo(post.getCreatedAt().toString()));
+            tvDescription.setText(post.getDescription());
             ParseFile image = post.getImage();
             if(image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
@@ -100,38 +94,5 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
         }
 
-        // get a Timestamp function
-        public String getRelativeTimeAgo(String parseData) {
-            String instagramFormat =  "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-            SimpleDateFormat sf = new SimpleDateFormat(instagramFormat, Locale.ENGLISH);
-            sf.setLenient(true);
-
-            try {
-                long time = sf.parse(parseData).getTime();
-                long now = System.currentTimeMillis();
-
-                final long diff = now - time;
-                if (diff < MINUTE_MILLIS) {
-                    return "just now";
-                } else if (diff < 2 * MINUTE_MILLIS) {
-                    return "1 minute ago";
-                } else if (diff < 50 * MINUTE_MILLIS) {
-                    return diff / MINUTE_MILLIS + " minutes ago";
-                } else if (diff < 90 * MINUTE_MILLIS) {
-                    return "1 hour ago";
-                } else if (diff < 24 * HOUR_MILLIS) {
-                    return diff / HOUR_MILLIS + " hours ago";
-                } else if (diff < 48 * HOUR_MILLIS) {
-                    return "1 day ago";
-                } else {
-                    return diff / DAY_MILLIS + " days ago";
-                }
-            } catch (ParseException e) {
-                Log.i(TAG, "getRelativeTimeAgo failed");
-                e.printStackTrace();
-            }
-
-            return "";
-        }
     }
 }
