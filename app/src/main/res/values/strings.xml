@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Instagram by Dhriti</string>
+    <string name="etUsername_hint">username</string>
+    <string name="etPassword_hint">password</string>
+    <string name="etDescription_hint">Description</string>
+    <string name="btnCapture_title">Take Picture</string>
+    <string name="btnSubmit_title">Submit</string>
+    <string name="btnFeed_title">Feed</string>
+    <string name="btnLogin_title">Login</string>
+    <string name="btnLogout_title">Logout</string>
+</resources>
