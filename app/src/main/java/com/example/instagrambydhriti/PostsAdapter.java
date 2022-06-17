@@ -6,18 +6,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagrambydhriti.Activities.MainActivity;
 import com.example.instagrambydhriti.Activities.PostDetailsActivity;
 import com.example.instagrambydhriti.Activities.UserDetailsActivity;
 import com.example.instagrambydhriti.Fragments.ProfileFragment;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
@@ -61,13 +69,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvUsername;
         private ImageView ivImage;
         private TextView tvDescription;
         private TextView tvDate;
         private TextView tvUsername2;
+        private ImageButton ibLike;
         // implemented for timestamp feature
         private static final int SECOND_MILLIS = 1000;
         private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -81,7 +90,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvUsername2 = itemView.findViewById(R.id.tvUsername2);
-            itemView.setOnClickListener(this);
+            ibLike = itemView.findViewById(R.id.ibLike);
         }
 
         public void bind(Post post) {
@@ -90,23 +99,49 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription.setText(post.getDescription());
             tvDate.setText(getRelativeTimeAgo(post.getCreatedAt().toString()));
             tvUsername2.setText(post.getUser().getUsername());
+            ibLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    post.setLikes(post.getLikes()+1);
+                    JSONArray usersLiked = post.getUsersLiked();
+                    int position = -1;
+                    for(int i = 0; i<usersLiked.length(); i++){
+                        try {
+                            if(usersLiked.get(i).toString().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                position = i;
+                                break;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(position > 0){
+                        Glide.with(context).load(R.drawable.ufi_heart).into(ibLike);
+                        usersLiked.remove(position);
+                    }
+                    else{
+                        usersLiked.put(ParseUser.getCurrentUser().getObjectId());
+                        Glide.with(context).load(R.drawable.ufi_heart_active).into(ibLike);
+                    }
+                    post.setUsersLiked(usersLiked);
+                    post.saveInBackground();
+                }
+            });
             ParseFile image = post.getImage();
             if(image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+            ivImage.setOnClickListener(new View.OnClickListener() {
+                // implemented for post details click
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, UserDetailsActivity.class);
+                    intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
+                    context.startActivity(intent);
+                }
+            });
         }
 
-        // implemented for post details click
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Post post = posts.get(position);
-                Intent intent = new Intent(context, UserDetailsActivity.class);
-                intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
-                context.startActivity(intent);
-            }
-        }
         // get a Timestamp function
         public String getRelativeTimeAgo(String parseData) {
             String instagramFormat =  "EEE MMM dd HH:mm:ss ZZZZZ yyyy";

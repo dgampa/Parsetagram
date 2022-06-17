@@ -4,8 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="5dp"
     android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/ibLike"
+        android:layout_width="70dp"
+        android:layout_height="65dp"
+        android:layout_below="@id/ivImage"
+        android:layout_marginLeft="-15dp"
+        android:layout_marginTop="-15dp"
+        android:background="#6FFFFFFF"
+        android:checked="false"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        android:src="@drawable/ufi_heart" />
 
     <TextView
         android:id="@+id/tvUsername"
@@ -22,21 +35,13 @@
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbPostOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ivImage"
-        android:background="@color/white"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tbPostOptions"
+        android:layout_below="@id/ibLike"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="-15dp"
         android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/tvUsername2"
         android:layout_toRightOf="@id/tvUsername"
@@ -53,7 +58,8 @@
         android:id="@+id/tvUsername2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tbPostOptions"
+        android:layout_below="@id/ibLike"
+        android:layout_marginTop="-15dp"
         tools:text="Username" />
 
 </RelativeLayout>
