@@ -5,7 +5,11 @@
     <string name="etDescription_hint">Description</string>
     <string name="btnCapture_title">Take Picture</string>
     <string name="btnSubmit_title">Submit</string>
-    <string name="btnFeed_title">Feed</string>
     <string name="btnLogin_title">Login</string>
-    <string name="btnLogout_title">Logout</string>
+    <string name="btnSignUp_title">Create An Account</string>
+    <string name="text_feed">Home</string>
+    <string name="text_capture">Capture</string>
+    <string name="text_profile">Profile</string>
+    <string name="text_logout">Logout</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
